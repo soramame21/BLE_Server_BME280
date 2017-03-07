@@ -1,16 +1,19 @@
-TL;DR : There is a ".bin" file in the BUILD directory that you can directly flash to the NUCLEO_F429ZI
+TL;DR : There is a ".bin" file in the BUILD directory that you can directly flash to the TY51822r3
 
-# BLE_Server_MY_OPT3001
-mbed application for BLE server with STM32F429 and ST BLE shield and TI OPT 3001 light sensor
+# BLE_Server_BME280
+mbed application for BLE server on TY51822r3 with a builtin BLE shield and Bosch BME280 sensor
 
-This application needs to be flashed into a NUCLEO_F429ZI running mbed firmware. It also needs an X-NUCLEO-IDB05A1 BLE shield running v7.2 or later firmware. The latest firmware
-can be found here: https://developer.mbed.org/teams/ST/code/BlueNRG-MS-Stack-Updater/
+This application needs to be flashed into a TY51822r3 running mbed firmware.
 
-For the light sensor, I'm using a BOOSTXL-SENSORS breakout board from TI.
+The instractions for updating firmware is at here: https://developer.mbed.org/teams/Switch-Science/wiki/Firmware-Switch-Science-mbed-TY51822r3 
+
+The latest firmware can be found here: https://developer.mbed.org/media/uploads/asagin/lpc11u35_sscity_if_crc.bin
+
+The  BME280 sensor is an environmental sensor from Bosch, which measures temperature, humidity and pressure.
 
 You'll also need a couple of jumpers, USB cables etc.
 
-Please find the BLE_Client application under  https://github.com/ashok-rao/BLE_Client_My_OPT3001 repo.
+Please find the BLE Gatt Client application under https://github.com/soramame21/BLEClient_mbedDevConn repo.
 
 You can verify the output of this application either:
   - on a serial terminal for your respective OS 
@@ -19,4 +22,4 @@ You can verify the output of this application either:
 
 The application will print a few messages on the serial terminal and start reading the light sensor and show the readings with a 1sec delay.
 
-If you are using the Nordic android app, you can scan for the "OPT3001" device and "connect" to it. Upon successful discovery of services, you can enable "notifications" and start getting the light sensor's data in hex.
+If you are using the Nordic android app, you can scan for the "BME280" device and "connect" to it. Upon successful discovery of services, you can enable "notifications" and start getting the light sensor's data in hex.
