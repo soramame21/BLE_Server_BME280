@@ -37,4 +37,5 @@ You can verify the output of this application either:
     
     OR
   - on a BLE enabled Android device with the Nordic nRF connect app
+  
     You can scan for the "BME280" device and "connect" to it. Upon successful discovery of services, you can enable "notifications" and start getting the sensor's data.
