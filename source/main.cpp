@@ -1,24 +1,26 @@
 #include "mbed.h"
 #include "rtos.h"
 #include "stdio.h"
-#include "OPT3001.h"
+#include "BME280.h"
 #include "ble/BLE.h"
 #include "ble/Gap.h"
+#include "EnvironmentalService.h"
 
-#define SERVICE_UUID					0xA000
-#define CHARACTERISTIC_UUID		0xA001
-
-//BLE ble;
 BLE &ble = BLE::Instance();
 DigitalOut led1(LED1);
 DigitalOut led2(LED2);
 
-const static char DEVICE_NAME[] = "OPT3001";
-const static uint16_t uuid16_list[] = {SERVICE_UUID};
-float lux_data = 0.0;
+#if defined(TARGET_LPC1768)
+BME280 sensor(p28, p27);
+#elif defined(TARGET_TY51822R3)
+BME280 sensor(I2C_SDA0, I2C_SCL0);
+#else
+BME280 sensor(I2C_SDA, I2C_SCL);
+#endif
 
-ReadOnlyGattCharacteristic<float> SensorReading(CHARACTERISTIC_UUID, &lux_data, GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY);
-
+const static char DEVICE_NAME[] = "BME280";
+const static uint16_t uuid16_list[] = {GattService::UUID_ENVIRONMENTAL_SERVICE};
+static EnvironmentalService *EvnSer=NULL;
 
 void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *params)
 {
@@ -29,18 +31,11 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
 {
     BLE &ble   = params->ble;
     ble_error_t error = params->error;
-
-	const Gap::AdvertisementCallbackParams_t *params_advCallback;
+    EvnSer = new EnvironmentalService(ble);
 
 	printf("Inside BLE..starting payload creation..\n");
 
     ble.gap().onDisconnection(disconnectionCallback);
-
-
-	GattCharacteristic *charTable[] = {&SensorReading};
-    GattService sensorService(SERVICE_UUID, charTable, sizeof(charTable) / sizeof(GattCharacteristic *));
-    ble.addService(sensorService);
-
 
     /* Setup advertising. */
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED | GapAdvertisingData::LE_GENERAL_DISCOVERABLE);
@@ -54,7 +49,7 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
 
     ble.gap().setAdvertisingInterval(1000); /* 1000ms */
     error = ble.gap().startAdvertising();
-		printf("ble.gap().startAdvertising() => %u\r\n", error);
+	printf("ble.gap().startAdvertising() => %u\r\n", error);
 
 	/****************************************
 
@@ -73,14 +68,17 @@ void periodicCallback(void) {
 
 /************************ Thread #1 for light sensor ************************/
 
-void light_sensor(void) {
-	read_DeviceID();
-
+void read_sensor(void) {
+    float tmp_t, tmp_p, tmp_h;
 	while(true) {
-		lux_data = read_sensor();
-		printf("Lux = %0.2f\n", lux_data);
+		if(EvnSer!=NULL) {
+        		tmp_t=sensor.getTemperature(); 
+        		tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
+               EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
+               EvnSer->updateHumidity(tmp_h); 
+               printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\n", tmp_p, tmp_t, tmp_h );
+        }
 		Thread::wait(1000);
-		ble.updateCharacteristicValue(SensorReading.getValueHandle(), (uint8_t *)&lux_data, sizeof(float));
 	}
 }
 
@@ -117,12 +115,13 @@ void Bluetooth_LE_server(void) {
 /************************ Thread #3 main() ************************/
 
 int main() {
-	//printf("Inside main\n");
+//	printf("Inside main\n");
 
 		Thread thread1;
 		Thread thread2;
-
-		thread1.start(light_sensor);
+		
+		EvnSer=NULL;
+		thread1.start(read_sensor);
 		thread2.start(Bluetooth_LE_server);
 
 /*
