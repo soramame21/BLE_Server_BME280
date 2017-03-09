@@ -24,7 +24,7 @@ BME280 uses I2C interface (SDI/SCK) to communicate with TY51822r3. please refer 
 * [BME280 library] (https://developer.mbed.org/users/MACRUM/code/BME280/) made by Toyo. 
 
 ## Overview
-![Overview of Demo](myImageBME280.tif)
+![Overview of Demo](myImageBME280.png)
 
 
 
