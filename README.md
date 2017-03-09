@@ -8,14 +8,14 @@ mbed application for BLE GATT server on TY51822r3 with a builtin BLE shield and 
     
     [The instractions for updating firmware] (https://developer.mbed.org/teams/Switch-Science/wiki/Firmware-Switch-Science-mbed-TY51822r3)
 
-    The latest firmware version : https://developer.mbed.org/media/uploads/asagin/lpc11u35_sscity_if_crc.bin
+    [The latest firmware version] (https://developer.mbed.org/media/uploads/asagin/lpc11u35_sscity_if_crc.bin)
 
-* BME280 sensor https://developer.mbed.org/components/BME280-Combined-humidity-and-pressure-se/
+* [BME280 sensor] (https://developer.mbed.org/components/BME280-Combined-humidity-and-pressure-se/)
     
 * Breadboard, wires, 2 registers (2.2k-ohm) and a USB cable.
 
 ## Wiring
-BME280 uses I2C interface (SDI/SCK) to communicate with TY51822r3. please refer a image wiring with Arduino Uno.  http://trac.switch-science.com/attachment/wiki/BME280/s-BME280_12.jpg
+BME280 uses I2C interface (SDI/SCK) to communicate with TY51822r3. please refer [a image wiring with Arduino Uno]. (http://trac.switch-science.com/attachment/wiki/BME280/s-BME280_12.jpg)
 * SDI and SCK must be pulled-up by 2.2k-ohm registers.
 
 * SDI wired to P0_30 (sda I2C0), SCK wired to P0_7 (scl I2C0)
