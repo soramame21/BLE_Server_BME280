@@ -15,13 +15,13 @@ mbed application for BLE GATT server on TY51822r3 with a builtin BLE shield and 
 * Breadboard, wires, 2 registers (2.2k-ohm) and a USB cable.
 
 ## Wiring
-BME280 uses I2C interface (SDI/SCK) to communicate with TY51822r3. please refer [a image wiring with Arduino Uno]. (http://trac.switch-science.com/attachment/wiki/BME280/s-BME280_12.jpg)
+BME280 uses I2C interface (SDI/SCK) to communicate with TY51822r3. please refer [a image wiring with Arduino Uno](http://trac.switch-science.com/attachment/wiki/BME280/s-BME280_12.jpg).
 * SDI and SCK must be pulled-up by 2.2k-ohm registers.
 
 * SDI wired to P0_30 (sda I2C0), SCK wired to P0_7 (scl I2C0)
 
 ## Required software
-* BME280 library made by Toyo.  https://developer.mbed.org/users/MACRUM/code/BME280/
+* [BME280 library] made by Toyo.  (https://developer.mbed.org/users/MACRUM/code/BME280/)
 
 ## Overview
 ![Overview of Demo](myImageBME280.tif)
