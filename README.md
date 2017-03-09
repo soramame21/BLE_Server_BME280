@@ -31,11 +31,14 @@ BME280 uses I2C interface (SDI/SCK) to communicate with TY51822r3. please refer 
 Please find the BLE GATT Client application under https://github.com/soramame21/BLEClient_mbedDevConn repo.
 
 You can verify the output of this application either:
-  - on a serial terminal for your respective OS 
+  - on a serial terminal for your respective OS
+  
+    BME280 data are read and print every second.
+    
     OR
   - on a BLE enabled Android device with the Nordic nRF connect app
 
 
-The application will read BME280 every second and print measured values to serial terminal.
+The application will  to serial terminal.
 
 If you are using the Nordic android app, you can scan for the "BME280" device and "connect" to it. Upon successful discovery of services, you can enable "notifications" and start getting the sensor's data.
