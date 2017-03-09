@@ -6,9 +6,9 @@ mbed application for BLE GATT server on TY51822r3 with a builtin BLE shield and 
     
     It is a Bluetooth low energy development board with the Nordic's nRF51822 Rev.3 SoC.
     
-    [The instractions for updating firmware] (https://developer.mbed.org/teams/Switch-Science/wiki/Firmware-Switch-Science-mbed-TY51822r3)
+    [Instractions for updating firmware] (https://developer.mbed.org/teams/Switch-Science/wiki/Firmware-Switch-Science-mbed-TY51822r3)
 
-    [The latest firmware version] (https://developer.mbed.org/media/uploads/asagin/lpc11u35_sscity_if_crc.bin)
+    [Latest firmware version] (https://developer.mbed.org/media/uploads/asagin/lpc11u35_sscity_if_crc.bin)
 
 * [BME280 sensor] (https://developer.mbed.org/components/BME280-Combined-humidity-and-pressure-se/)
     
@@ -21,7 +21,7 @@ BME280 uses I2C interface (SDI/SCK) to communicate with TY51822r3. please refer 
 * SDI wired to P0_30 (sda I2C0), SCK wired to P0_7 (scl I2C0)
 
 ## Required software
-* [BME280 library] made by Toyo.  (https://developer.mbed.org/users/MACRUM/code/BME280/)
+* [BME280 library] (https://developer.mbed.org/users/MACRUM/code/BME280/) made by Toyo. 
 
 ## Overview
 ![Overview of Demo](myImageBME280.tif)
