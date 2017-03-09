@@ -2,7 +2,7 @@
 mbed application for BLE GATT server on TY51822r3 with a builtin BLE shield and wired Bosch BME280 sensor. it broadcasts measured value of temperature, humidity and pressure to BLE GATT client.
 
 ## Required hardware
-* TY51822r3 target platform https://developer.mbed.org/platforms/Switch-Science-mbed-TY51822r3/
+* [TY51822r3 target platform] (https://developer.mbed.org/platforms/Switch-Science-mbed-TY51822r3/)
     
     It is a Bluetooth low energy development board with the Nordic's nRF51822 Rev.3 SoC.
     
