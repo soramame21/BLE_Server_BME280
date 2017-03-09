@@ -6,7 +6,7 @@ mbed application for BLE GATT server on TY51822r3 with a builtin BLE shield and 
     
     It is a Bluetooth low energy development board with the Nordic's nRF51822 Rev.3 SoC.
     
-    The instractions for updating firmware : https://developer.mbed.org/teams/Switch-Science/wiki/Firmware-Switch-Science-mbed-TY51822r3 
+    [The instractions for updating firmware] (https://developer.mbed.org/teams/Switch-Science/wiki/Firmware-Switch-Science-mbed-TY51822r3)
 
     The latest firmware version : https://developer.mbed.org/media/uploads/asagin/lpc11u35_sscity_if_crc.bin
 
