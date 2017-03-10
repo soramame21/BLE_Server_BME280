@@ -11,8 +11,9 @@ Please install [mbed CLI](https://github.com/ARMmbed/mbed-cli#installing-mbed-cl
 From the command line, import the example:
 
 ```
-mbed import https://github.com/soramame21/BLE_Server_BME280
+git clone https://github.com/soramame21/BLE_Server_BME280
 cd BLE_Server_BME280
+mbed deploy
 ```
 
 ### Now compile
@@ -27,23 +28,30 @@ Your PC may take a few minutes to compile your code. At the end you should get t
 
 ```
 [snip]
-+----------------------------+-------+-------+------+
-| Module                     | .text | .data | .bss |
-+----------------------------+-------+-------+------+
-| Misc                       | 13939 |    24 | 1372 |
-| core/hal                   | 16993 |    96 |  296 |
-| core/rtos                  |  7384 |    92 | 4204 |
-| features/FEATURE_IPV4      |    80 |     0 |  176 |
-| frameworks/greentea-client |  1830 |    60 |   44 |
-| frameworks/utest           |  2392 |   512 |  292 |
-| Subtotals                  | 42618 |   784 | 6384 |
-+----------------------------+-------+-------+------+
+Link: BLE_Server_BME280
+Elf2Bin: BLE_Server_BME280
++-----------------------+-------+-------+------+
+| Module                | .text | .data | .bss |
++-----------------------+-------+-------+------+
+| Misc                  | 17384 |    29 |  404 |
+| drivers               |  1489 |     8 |   56 |
+| features/FEATURE_BLE  | 12796 |    38 |  512 |
+| hal                   |   558 |    16 |    0 |
+| platform              |  1759 |     8 |   92 |
+| rtos                  |   598 |     8 |    0 |
+| rtos/rtx              |  6598 |   100 | 5036 |
+| targets/TARGET_NORDIC | 23070 |   270 | 2423 |
+| Subtotals             | 64252 |   477 | 8523 |
++-----------------------+-------+-------+------+
 Allocated Heap: unknown
 Allocated Stack: unknown
-Total Static RAM memory (data + bss): 7168 bytes
-Total RAM memory (data + bss + heap + stack): 7168 bytes
-Total Flash memory (text + data + misc): 43402 bytes
-Image: .\.build\K64F\ARM\mbed-os-example-blinky.bin
+Total Static RAM memory (data + bss): 9000 bytes
+Total RAM memory (data + bss + heap + stack): 9000 bytes
+Total Flash memory (text + data + misc): 64729 bytes
+
+Object file test_env.o is not unique! It could be made from: C:\iotBu\myrepo\BLE_Server_BME280\mbed-os\features/unsupported\tests\mbed\env\test_env.cpp .\mbed-os\features\frameworks\greentea-client\source\test_env.cpp
+Image: .\BUILD\TY51822r3\ARM\BLE_Server_BME280.hex
+
 ```
 
 ### Program your board
@@ -58,15 +66,15 @@ Congratulations if you managed to complete this test!
 
 ## Required hardware
 * [TY51822r3 target platform](https://developer.mbed.org/platforms/Switch-Science-mbed-TY51822r3/)
-    
+
     It is a Bluetooth low energy development board with the Nordic's nRF51822 Rev.3 SoC.
-    
+
     [Instractions for updating firmware](https://developer.mbed.org/teams/Switch-Science/wiki/Firmware-Switch-Science-mbed-TY51822r3)
 
     [Latest firmware version](https://developer.mbed.org/media/uploads/asagin/lpc11u35_sscity_if_crc.bin)
 
 * [BME280 sensor](https://developer.mbed.org/components/BME280-Combined-humidity-and-pressure-se/)
-    
+
 * Breadboard, wires, 2 registers (2.2k-ohm) and a USB cable.
 
 ## Wiring
@@ -97,10 +105,10 @@ Please find the BLE GATT Client application under https://github.com/soramame21/
 
 You can verify the output of this application either:
   - on a serial terminal for your respective OS
-  
+
     BME280 data are read and print every second.
-    
+
     OR
   - on a BLE enabled Android device with the Nordic nRF connect app
-  
+
     You can scan for the "BME280" device and "connect" to it. Upon successful discovery of services, you can enable "notifications" and start getting the sensor's data.

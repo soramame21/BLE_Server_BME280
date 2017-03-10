@@ -33,7 +33,7 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
     ble_error_t error = params->error;
     EvnSer = new EnvironmentalService(ble);
 
-	printf("Inside BLE..starting payload creation..\n");
+	printf("Inside BLE..starting payload creation..\r\n");
 
     ble.gap().onDisconnection(disconnectionCallback);
 
@@ -74,7 +74,7 @@ void read_sensor(void) {
         	   tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
                EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
                EvnSer->updateHumidity(tmp_h); 
-               printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\n", tmp_p, tmp_t, tmp_h );
+               printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
 			   periodicCallback();
         }
 		Thread::wait(1000);
@@ -98,7 +98,7 @@ void Bluetooth_LE_server(void) {
 /************************ Thread #3 main() ************************/
 
 int main() {
-//	printf("Inside main\n");
+//	printf("Inside main\r\n");
 
 		Thread thread1;
 		Thread thread2;
