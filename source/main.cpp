@@ -67,32 +67,31 @@ void periodicCallback(void) {
 /************************ Thread #1 for light sensor ************************/
 
 void read_sensor(void) {
-  float tmp_t, tmp_p, tmp_h;
-	while(true) {
-		if(EvnSer!=NULL) {
-      tmp_t=sensor.getTemperature();
-      tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
-      EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
-      EvnSer->updateHumidity(tmp_h);
-      printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
-			periodicCallback();
+    float tmp_t, tmp_p, tmp_h;
+    while(true) {
+      if(EvnSer!=NULL) {
+        tmp_t=sensor.getTemperature();
+        tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
+        EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
+        EvnSer->updateHumidity(tmp_h);
+        printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
+    		periodicCallback();
+      }
+    	Thread::wait(1000);
     }
-		Thread::wait(1000);
-	}
 }
 
 /************************ Thread #2 for BLE activities ************************/
 
 void Bluetooth_LE_server(void) {
 
+    ble.init(bleInitComplete);
 
-	ble.init(bleInitComplete);
-
-	while(1) {
-		ble.processEvents();
-	}
-	//This statement might be un-reachable...??
-	Thread::wait(1000);
+    while(1) {
+      ble.processEvents();
+    }
+    //This statement might be un-reachable...??
+    Thread::wait(1000);
 }
 
 /************************ Thread #3 main() ************************/
@@ -100,15 +99,15 @@ void Bluetooth_LE_server(void) {
 int main() {
 //	printf("Inside main\r\n");
 
-  Thread thread1;
-	Thread thread2;
+    Thread thread1;
+    Thread thread2;
 
-	EvnSer=NULL;
-	thread1.start(read_sensor);
-	thread2.start(Bluetooth_LE_server);
+    EvnSer=NULL;
+    thread1.start(read_sensor);
+    thread2.start(Bluetooth_LE_server);
 
-	while(true) {
-	  led1 = !led1;
-	  Thread::wait(500);
-	}
+    while(true) {
+      led1 = !led1;
+      Thread::wait(500);
+    }
 }
