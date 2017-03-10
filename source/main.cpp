@@ -43,27 +43,25 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LOCAL_NAME, (uint8_t *)DEVICE_NAME, sizeof(DEVICE_NAME));
     ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
 
-		if (error == BLE_ERROR_NONE) {
-        led2 = 1;
-    }
+	if (error == BLE_ERROR_NONE)        led2 = 1;
 
     ble.gap().setAdvertisingInterval(1000); /* 1000ms */
     error = ble.gap().startAdvertising();
-	printf("ble.gap().startAdvertising() => %u\r\n", error);
+    printf("ble.gap().startAdvertising() => %u\r\n", error);
 
-	/****************************************
+    /****************************************
 
-	TODO : Print the address of the server. The below is partially working.
+    TODO : Print the address of the server. The below is partially working.
 
-	printf("Hello..My addr is: [%02x %02x %02x %02x %02x %02x] \r\n", params_advCallback->peerAddr[5], params_advCallback->peerAddr[4], params_advCallback->peerAddr[3], params_advCallback->peerAddr[2], params_advCallback->peerAddr[1], params_advCallback->peerAddr[0]);
-	****************************************/
+    printf("Hello..My addr is: [%02x %02x %02x %02x %02x %02x] \r\n", params_advCallback->peerAddr[5], params_advCallback->peerAddr[4], params_advCallback->peerAddr[3], params_advCallback->peerAddr[2], params_advCallback->peerAddr[1], params_advCallback->peerAddr[0]);
+    ****************************************/
 
 }
-/*
+
 void periodicCallback(void) {
     led1 = !led1;
 }
-*/
+
 
 
 /************************ Thread #1 for light sensor ************************/
@@ -72,11 +70,12 @@ void read_sensor(void) {
     float tmp_t, tmp_p, tmp_h;
 	while(true) {
 		if(EvnSer!=NULL) {
-        		tmp_t=sensor.getTemperature(); 
-        		tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
+        	   tmp_t=sensor.getTemperature(); 
+        	   tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
                EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
                EvnSer->updateHumidity(tmp_h); 
                printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\n", tmp_p, tmp_t, tmp_h );
+			   periodicCallback();
         }
 		Thread::wait(1000);
 	}
@@ -87,24 +86,8 @@ void read_sensor(void) {
 void Bluetooth_LE_server(void) {
 
 
-		ble.init(bleInitComplete);
-//    ble.onDisconnection(disconnectionCallback);
-//
-//		GattCharacteristic *charTable[] = {&SensorReading};
-//    GattService sensorService(SERVICE_UUID, charTable, sizeof(charTable) / sizeof(GattCharacteristic *));
-//    ble.addService(sensorService);
-//
-//    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED | GapAdvertisingData::LE_GENERAL_DISCOVERABLE);
-//    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LIST_16BIT_SERVICE_IDS, (uint8_t *)uuid16_list, sizeof(uuid16_list));
-//    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LOCAL_NAME, (uint8_t *) DEVICE_NAME, sizeof(DEVICE_NAME));
-//		ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
-//
-//    ble.gap().setAdvertisingInterval(1000);
-//    ble.gap().startAdvertising();
-//
-//	while(true) {
-//		ble.waitForEvent();
-//	}
+	ble.init(bleInitComplete);
+
 	while(1) {
 		ble.processEvents();
 	}
@@ -124,11 +107,6 @@ int main() {
 		thread1.start(read_sensor);
 		thread2.start(Bluetooth_LE_server);
 
-/*
-	while(true) {
-		ble.waitForEvent();
-	}
-*/
 	while(true) {
 		led1 = !led1;
 		Thread::wait(500);
