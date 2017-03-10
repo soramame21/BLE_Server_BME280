@@ -33,7 +33,7 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
     ble_error_t error = params->error;
     EvnSer = new EnvironmentalService(ble);
 
-	printf("Inside BLE..starting payload creation..\r\n");
+    printf("Inside BLE..starting payload creation..\r\n");
 
     ble.gap().onDisconnection(disconnectionCallback);
 
@@ -43,7 +43,7 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LOCAL_NAME, (uint8_t *)DEVICE_NAME, sizeof(DEVICE_NAME));
     ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
 
-	if (error == BLE_ERROR_NONE)        led2 = 1;
+    if (error == BLE_ERROR_NONE)        led2 = 1;
 
     ble.gap().setAdvertisingInterval(1000); /* 1000ms */
     error = ble.gap().startAdvertising();
@@ -67,16 +67,16 @@ void periodicCallback(void) {
 /************************ Thread #1 for light sensor ************************/
 
 void read_sensor(void) {
-    float tmp_t, tmp_p, tmp_h;
+  float tmp_t, tmp_p, tmp_h;
 	while(true) {
 		if(EvnSer!=NULL) {
-        	   tmp_t=sensor.getTemperature(); 
-        	   tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
-               EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
-               EvnSer->updateHumidity(tmp_h); 
-               printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
-			   periodicCallback();
-        }
+      tmp_t=sensor.getTemperature();
+      tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
+      EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
+      EvnSer->updateHumidity(tmp_h);
+      printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
+			periodicCallback();
+    }
 		Thread::wait(1000);
 	}
 }
@@ -100,15 +100,15 @@ void Bluetooth_LE_server(void) {
 int main() {
 //	printf("Inside main\r\n");
 
-		Thread thread1;
-		Thread thread2;
-		
-		EvnSer=NULL;
-		thread1.start(read_sensor);
-		thread2.start(Bluetooth_LE_server);
+  Thread thread1;
+	Thread thread2;
+
+	EvnSer=NULL;
+	thread1.start(read_sensor);
+	thread2.start(Bluetooth_LE_server);
 
 	while(true) {
-		led1 = !led1;
-		Thread::wait(500);
+	  led1 = !led1;
+	  Thread::wait(500);
 	}
 }
