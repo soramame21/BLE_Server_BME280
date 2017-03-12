@@ -1,14 +1,14 @@
 # BLE_Server_BME280
-This mbed application for BLE GATT server running over TY51822r3 with a builtin BLE shield and wired Bosch BME280 sensor. it broadcasts measured value of temperature, humidity and pressure to BLE GATT client.
+This mbed application for BLE GATT server running over TY51822r3 with a builtin BLE shield and wired Bosch BME280 sensor. It broadcasts measured value of temperature, humidity and pressure to BLE GATT client.
 
 # Getting started with it on mbed OS
 
-This is a very simple guide, reviewing the steps required to get BLE_Server_BME280 working on an mbed OS platform.
+This is a very simple guide, reviewing the steps required to get BLE_Server_BME280 working on mbed OS platform.
 Please install [mbed CLI](https://github.com/ARMmbed/mbed-cli#installing-mbed-cli).
 
 ## Get the example application!
 
-From the command line, import the example:
+From the command line, clone the example:
 
 ```
 git clone https://github.com/soramame21/BLE_Server_BME280
@@ -95,7 +95,7 @@ This is a free Nordic App can be downloaeded into smartphone.
 
 **Note:** Screens captures depicted below show what is expected from this example if the scanner used is nRF Master Control Panel version 4.9.0. If you encounter any difficulties consider trying another scanner or another version of nRF Master Control Panel. Alternative scanners may require reference to their manuals.
 
-1. Build and install this application on your board as explained above.
+1. Build and install this application on your board (=mbed device) as explained above.
 1. Open the BLE scanner on your phone.
 1. Start a scan, then find the device which should be named `BME280`
 
