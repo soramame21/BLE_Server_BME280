@@ -28,7 +28,7 @@ Your PC may take a few minutes to compile your code. At the end you should get t
 
 ```
 [snip]
-Link: BLE_Server_BME280 
+Link: BLE_Server_BME280
 Elf2Bin: BLE_Server_BME280
 +-----------------------+-------+-------+------+
 | Module                | .text | .data | .bss |
@@ -156,20 +156,19 @@ This is a free Nordic App can be downloaeded into smartphone.
 
 ## Wiring
 BME280 uses I2C interface (SDI/SCK) to communicate with TY51822r3. please refer following table about paired pin wiring between BME280 and TY51822r3.
-```
-  +------------+----------------+
-  | BME280 Pin | TY51822r3 Pin  |
-  +------------+----------------+
-  |  1 SDO     |      GND       |
-  |  2 SCK     |  P0_7 scl I2C0 |
-  |  3 SDI     | P0_30 sda I2C0 |
-  |  4 CSB     |      VDD       |
-  |  5 GND     |      GND       |
-  |  6 Vcore   |      VDD       |
-  |  7 Vio     |      VDD       |
-  +------------+----------------+
 
-```
+
+  | BME280 Pin   | TY51822r3 Pin   |
+  |--------------|-----------------|
+  |  1  SDO      |      GND        |
+  |  2  SCK      |  P0_7 scl I2C0  |
+  |  3  SDI      | P0_30 sda I2C0  |
+  |  4  CSB      |      VDD        |
+  |  5  GND      |      GND        |
+  |  6  Vcore    |      VDD        |
+  |  7  Vio      |      VDD        |
+
+
 * SDI and SCK must be pulled-up by 2.2k-ohm registers.
 
 
