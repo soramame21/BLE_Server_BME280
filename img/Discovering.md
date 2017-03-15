@@ -25,11 +25,11 @@
 
 1. Discover 3 characteristics of the service.
 
- Humidity with UUID: 0x2A6F
+    Humidity with UUID: 0x2A6F
 
- Pressure with UUID: 0x2A6D
+    Pressure with UUID: 0x2A6D
 
- Temperature with UUID: 0x2A6E
+    Temperature with UUID: 0x2A6E
 
     ![](./Screenshot_characteristics.png)
 
