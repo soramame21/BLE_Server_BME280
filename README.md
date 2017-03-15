@@ -91,7 +91,7 @@ ble.gap().startAdvertising() => 0
 ```
 
 ### Discovering BME280 from `nRF Connect`
-[Please click this link for detail explanation](./img/Discovering.md)
+[Please click this link for reading detail explanation](./img/Discovering.md)
 
 
 ## Required hardware
