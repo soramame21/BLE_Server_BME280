@@ -58,25 +58,18 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
 
 }
 
-void periodicCallback(void) {
-    led1 = !led1;
-}
-
-
-
 /************************ Thread #1 for light sensor ************************/
 
 void read_sensor(void) {
     float tmp_t, tmp_p, tmp_h;
     while(true) {
-      if(EvnSer!=NULL) {
-        tmp_t=sensor.getTemperature();
-        tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
-        EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
-        EvnSer->updateHumidity(tmp_h);
-        printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
-    		periodicCallback();
-      }
+        if(EvnSer!=NULL) {
+            tmp_t=sensor.getTemperature();
+            tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
+            EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
+            EvnSer->updateHumidity(tmp_h);
+            printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
+        }
     	Thread::wait(1000);
     }
 }
@@ -88,7 +81,7 @@ void Bluetooth_LE_server(void) {
     ble.init(bleInitComplete);
 
     while(1) {
-      ble.processEvents();
+        ble.processEvents();
     }
     //This statement might be un-reachable...??
     Thread::wait(1000);
@@ -107,7 +100,7 @@ int main() {
     thread2.start(Bluetooth_LE_server);
 
     while(true) {
-      led1 = !led1;
-      Thread::wait(500);
+        led1 = !led1;
+        Thread::wait(500);
     }
 }
