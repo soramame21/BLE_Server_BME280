@@ -14,6 +14,7 @@ DigitalOut led2(LED2);
 BME280 sensor(p28, p27);
 #elif defined(TARGET_TY51822R3)
 BME280 sensor(I2C_SDA0, I2C_SCL0);
+#define SMALL_STACK_SIZE   960     //reduced thread stack size (default:2048)
 #else
 BME280 sensor(I2C_SDA, I2C_SCL);
 #endif
@@ -91,9 +92,9 @@ void Bluetooth_LE_server(void) {
 
 int main() {
 //	printf("Inside main\r\n");
-
-    Thread thread1;
-    Thread thread2;
+    // reduced following stack size to 960 x 2 (default stack size: 2048 x 2)
+    Thread thread1(osPriorityNormal,SMALL_STACK_SIZE,NULL);
+    Thread thread2(osPriorityNormal,SMALL_STACK_SIZE,NULL);
 
     EvnSer=NULL;
     thread1.start(read_sensor);
