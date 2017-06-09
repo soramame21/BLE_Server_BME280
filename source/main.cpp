@@ -10,11 +10,12 @@ BLE &ble = BLE::Instance();
 DigitalOut led1(LED1);
 DigitalOut led2(LED2);
 
+#define SMALL_STACK_SIZE   960     //reduced thread stack size (default:2048)
+
 #if defined(TARGET_LPC1768)
 BME280 sensor(p28, p27);
 #elif defined(TARGET_TY51822R3)
 BME280 sensor(I2C_SDA0, I2C_SCL0);
-#define SMALL_STACK_SIZE   960     //reduced thread stack size (default:2048)
 #else
 BME280 sensor(I2C_SDA, I2C_SCL);
 #endif
@@ -71,7 +72,7 @@ void read_sensor(void) {
             EvnSer->updateHumidity(tmp_h);
             printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
         }
-    	Thread::wait(1000);
+        Thread::wait(1000);
     }
 }
 
@@ -91,7 +92,7 @@ void Bluetooth_LE_server(void) {
 /************************ Thread #3 main() ************************/
 
 int main() {
-//	printf("Inside main\r\n");
+//    printf("Inside main\r\n");
     // reduced following stack size to 960 x 2 (default stack size: 2048 x 2)
     Thread thread1(osPriorityNormal,SMALL_STACK_SIZE,NULL);
     Thread thread2(osPriorityNormal,SMALL_STACK_SIZE,NULL);
