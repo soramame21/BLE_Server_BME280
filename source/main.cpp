@@ -1,20 +1,9 @@
 #include "mbed.h"
-#include "rtos.h"
-#include "stdio.h"
 #include "BME280.h"
 #include "ble/BLE.h"
-#include "ble/Gap.h"
-#include "EnvironmentalService.h"
+#include "ble/services/EnvironmentalService.h"
 
-BLE &ble = BLE::Instance();
-DigitalOut led1(LED1);
-DigitalOut led2(LED2);
-
-#define SMALL_STACK_SIZE   960     //reduced thread stack size (default:2048)
-
-#if defined(TARGET_LPC1768)
-BME280 sensor(p28, p27);
-#elif defined(TARGET_TY51822R3)
+#if defined(TARGET_TY51822R3)
 BME280 sensor(I2C_SDA0, I2C_SCL0);
 #else
 BME280 sensor(I2C_SDA, I2C_SCL);
@@ -22,7 +11,8 @@ BME280 sensor(I2C_SDA, I2C_SCL);
 
 const static char DEVICE_NAME[] = "BME280";
 const static uint16_t uuid16_list[] = {GattService::UUID_ENVIRONMENTAL_SERVICE};
-static EnvironmentalService *EvnSer=NULL;
+static EnvironmentalService *service = NULL;
+static EventQueue eventQueue(/* event count */ 16 * EVENTS_EVENT_SIZE);
 
 void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *params)
 {
@@ -31,12 +21,11 @@ void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *params)
 
 void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
 {
-    BLE &ble   = params->ble;
+    BLE &ble = params->ble;
     ble_error_t error = params->error;
-    EvnSer = new EnvironmentalService(ble);
+    service = new EnvironmentalService(ble);
 
     printf("Inside BLE..starting payload creation..\r\n");
-
     ble.gap().onDisconnection(disconnectionCallback);
 
     /* Setup advertising. */
@@ -44,65 +33,43 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LIST_16BIT_SERVICE_IDS, (uint8_t *)uuid16_list, sizeof(uuid16_list));
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LOCAL_NAME, (uint8_t *)DEVICE_NAME, sizeof(DEVICE_NAME));
     ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
-
-    if (error == BLE_ERROR_NONE)        led2 = 1;
-
-    ble.gap().setAdvertisingInterval(1000); /* 1000ms */
+    ble.gap().setAdvertisingInterval(1000);
     error = ble.gap().startAdvertising();
+
     printf("ble.gap().startAdvertising() => %u\r\n", error);
 
-    /****************************************
-
-    TODO : Print the address of the server. The below is partially working.
-
-    printf("Hello..My addr is: [%02x %02x %02x %02x %02x %02x] \r\n", params_advCallback->peerAddr[5], params_advCallback->peerAddr[4], params_advCallback->peerAddr[3], params_advCallback->peerAddr[2], params_advCallback->peerAddr[1], params_advCallback->peerAddr[0]);
-    ****************************************/
-
 }
 
-/************************ Thread #1 for light sensor ************************/
-
-void read_sensor(void) {
+void readSensorCallback(void)
+{
     float tmp_t, tmp_p, tmp_h;
-    while(true) {
-        if(EvnSer!=NULL) {
-            tmp_t=sensor.getTemperature();
-            tmp_p=sensor.getPressure();    tmp_h=sensor.getHumidity();
-            EvnSer->updatePressure(tmp_p);  EvnSer->updateTemperature(tmp_t);
-            EvnSer->updateHumidity(tmp_h);
-            printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
-        }
-        Thread::wait(1000);
+    
+    if(service != NULL) {
+        tmp_t = sensor.getTemperature();
+        tmp_p = sensor.getPressure();
+        tmp_h = sensor.getHumidity();
+        service->updatePressure(tmp_p);
+        service->updateTemperature(tmp_t);
+        service->updateHumidity(tmp_h);
+        printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
     }
 }
 
-/************************ Thread #2 for BLE activities ************************/
+void scheduleBleEventsProcessing(BLE::OnEventsToProcessCallbackContext* context)
+{
+    BLE &ble = BLE::Instance();
+    eventQueue.call(Callback<void()>(&ble, &BLE::processEvents));
+}
 
-void Bluetooth_LE_server(void) {
+int main()
+{
+    eventQueue.call_every(1000, readSensorCallback);
 
+    BLE &ble = BLE::Instance();
+    ble.onEventsToProcess(scheduleBleEventsProcessing);
     ble.init(bleInitComplete);
 
-    while(1) {
-        ble.processEvents();
-    }
-    //This statement might be un-reachable...??
-    Thread::wait(1000);
-}
+    eventQueue.dispatch_forever();
 
-/************************ Thread #3 main() ************************/
-
-int main() {
-//    printf("Inside main\r\n");
-    // reduced following stack size to 960 x 2 (default stack size: 2048 x 2)
-    Thread thread1(osPriorityNormal,SMALL_STACK_SIZE,NULL);
-    Thread thread2(osPriorityNormal,SMALL_STACK_SIZE,NULL);
-
-    EvnSer=NULL;
-    thread1.start(read_sensor);
-    thread2.start(Bluetooth_LE_server);
-
-    while(true) {
-        led1 = !led1;
-        Thread::wait(500);
-    }
+    return 0;
 }
