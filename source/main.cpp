@@ -3,6 +3,10 @@
 #include "ble/BLE.h"
 #include "ble/services/EnvironmentalService.h"
 
+#if defined(_DEBUG)
+Serial pc(USBTX, USBRX);
+#endif
+
 #if defined(TARGET_TY51822R3)
 BME280 sensor(I2C_SDA0, I2C_SCL0);
 #else
@@ -24,8 +28,9 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
     BLE &ble = params->ble;
     ble_error_t error = params->error;
     service = new EnvironmentalService(ble);
-
-    printf("Inside BLE..starting payload creation..\r\n");
+#if defined(_DEBUG)
+    pc.printf("Inside BLE..starting payload creation..\r\n");
+#endif
     ble.gap().onDisconnection(disconnectionCallback);
 
     /* Setup advertising. */
@@ -35,9 +40,9 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params)
     ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
     ble.gap().setAdvertisingInterval(1000);
     error = ble.gap().startAdvertising();
-
-    printf("ble.gap().startAdvertising() => %u\r\n", error);
-
+#if defined(_DEBUG)
+    pc.printf("ble.gap().startAdvertising() => %u\r\n", error);
+#endif
 }
 
 void readSensorCallback(void)
@@ -51,7 +56,9 @@ void readSensorCallback(void)
         service->updatePressure(tmp_p);
         service->updateTemperature(tmp_t);
         service->updateHumidity(tmp_h);
-        printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
+#if defined(_DEBUG)
+        pc.printf("%04.2f hPa,  %2.2f degC,  %2.2f %%\r\n", tmp_p, tmp_t, tmp_h );
+#endif
     }
 }
 
